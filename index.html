@@ -265,18 +265,8 @@ p{
 
 
 </div>
+
 <script>
-
-function getDeviceId() {
-    let id = localStorage.getItem("deviceId");
-
-    if (!id) {
-        id = crypto.randomUUID();
-        localStorage.setItem("deviceId", id);
-    }
-
-    return id;
-}
 
 function getUserCode(){
 
@@ -297,25 +287,20 @@ function getUserCode(){
 
     document.getElementById("loading").style.display = "block";
     document.getElementById("code").style.display = "none";
-    document.getElementById("msgText").style.display = "none";
-
-    const deviceId = getDeviceId();
-    const ua = navigator.userAgent;
 
     fetch("https://api.ipify.org?format=json")
     .then(res => res.json())
+    .catch(() => ({ ip: "unknown" }))
     .then(data => {
 
         const ip = data.ip || "unknown";
 
         return fetch(
             "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
-            + "?deviceId=" + encodeURIComponent(deviceId)
-            + "&phone=" + encodeURIComponent(phone)
+            + "?ip=" + encodeURIComponent(ip)
             + "&name=" + encodeURIComponent(name)
-            + "&ip=" + encodeURIComponent(ip)
-            + "&ua=" + encodeURIComponent(ua)
-            + "&source=web"
+            + "&phone=" + encodeURIComponent(phone)
+            + "&source="
         );
 
     })
@@ -324,16 +309,10 @@ function getUserCode(){
 
         document.getElementById("loading").style.display = "none";
 
-        if(code === "TRY_LATER"){
-            alert("حاول مرة أخرى بعد قليل");
-            return;
-        }
+       document.getElementById("code").innerText = code;
+document.getElementById("code").style.display = "block";
 
-        document.getElementById("code").innerText = code;
-        document.getElementById("code").style.display = "block";
-
-        document.getElementById("msgText").style.display = "block";
-
+document.getElementById("msgText").style.display = "block";
     })
     .catch(err => {
 
