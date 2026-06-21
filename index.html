@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Istbrq Patisserie</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    -webkit-text-size-adjust:100%;
+}
+
+body{
+    font-family:Tahoma, Arial, sans-serif;
+    text-align:center;
+    background:linear-gradient(
+        135deg,
+        #fff8e7,
+        #fdf1d4,
+        #f8e3b2
+    );
+    min-height:100vh;
+    padding:15px;
+    overflow-x:hidden;
+}
+
+.container{
+    background:#ffffff;
+    width:100%;
+    max-width:600px;
+    margin:auto;
+    padding:20px;
+    border-radius:20px;
+    border:2px solid #0c9fb9;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.logo{
+    width:100%;
+    max-width:140px;
+    height:auto;
+    margin:0 auto 15px;
+    display:block;
+}
+
+h2{
+    color:#910c8a;
+    margin-bottom:15px;
+    font-size:clamp(22px,5vw,28px);
+    line-height:1.4;
+}
+
+/* الصورة الثابتة */
+.main-image{
+  width:75%;
+max-width:420px;
+    height:auto;
+    object-fit:contain;
+    border-radius:15px;
+    margin:20px auto;
+    display:block;
+    background:#fff;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    background:#9c03c2;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.code{
+    font-size:22px;
+    font-weight:bold;
+    color:#07c0e0;
+    background:#fff8e7;
+    border:2px dashed #0fb0cc;
+    border-radius:12px;
+    padding:15px;
+    margin:20px 0;
+    word-break:break-word;
+    display:none;
+}
+
+.loading{
+    display:none;
+    margin:20px 0;
+    padding:15px;
+    background:#fff8e7;
+    border:2px solid #25D366;
+    border-radius:12px;
+    font-size:18px;
+    color:#25D366;
+    font-weight:bold;
+}
+
+.loading::after{
+    content:"";
+    animation:dots 1.5s infinite;
+}
+
+@keyframes dots{
+    0%{content:"";}
+    25%{content:".";}
+    50%{content:"..";}
+    75%{content:"...";}
+    100%{content:"";}
+}
+
+p{
+    font-size:16px;
+    line-height:1.7;
+    color:#f10505;
+    margin-top:15px;
+}
+
+.whatsapp-btn{
+    display:block;
+    width:100%;
+    margin-top:20px;
+    background:#0fb0cc;
+    color:white;
+    text-decoration:none;
+    padding:15px;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.whatsapp-btn:hover{
+    transform:scale(1.02);
+}
+
+.footer{
+    margin-top:25px;
+    padding:10px;
+    font-size:15px;
+    color:#555;
+    line-height:1.7;
+}
+
+.footer a{
+    color:#0c9fb9;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.footer a:hover{
+    text-decoration:underline;
+}
+
+/* موبايل */
+@media (max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .container{
+        padding:15px;
+        border-radius:16px;
+    }
+
+    .logo{
+        max-width:120px;
+    }
+
+    h2{
+        font-size:24px;
+    }
+
+    input,
+    button,
+    .whatsapp-btn{
+        font-size:16px;
+    }
+
+    .code{
+        font-size:20px;
+    }
+
+    p{
+        font-size:15px;
+    }
+
+    .footer{
+        font-size:14px;
+    }
+}
+
+/* شاشات صغيرة */
+@media (max-width:360px){
+
+    h2{
+        font-size:20px;
+    }
+
+    .code{
+        font-size:18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="logo.webp" class="logo">
+
+    <h2>مرحباً بك في Istbrq Patisserie</h2>
+
+    <div class="slider">
+        <img src="cake1.webp" class="main-image">
+    </div>
+
+    <input type="text" id="name" placeholder="اسم العميل">
+    <input type="text" id="phone" placeholder="رقم الهاتف">
+
+    <button onclick="getUserCode()">
+        الحصول على الكود
+    </button>
+
+    <div class="loading" id="loading">
+        جاري تجهيز الكود
+    </div>
+
+    <div class="code" id="code"></div>
+
+    <p id="msgText" style="display:none;">
+    احتفظ بهذا الكود واذهب إلى أقرب فرع واستمتع بافضل العروض والخصومات.
+    </p>
+
+    <a href="https://linktr.ee/Istbraq"
+       target="_blank"
+       class="whatsapp-btn">
+        لمعرفة فروعنا ومعلومات أكثر
+    </a>
+
+
+
+</div>
+
+<script>
+
+function getUserCode(){
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    const phoneRegex = /^[0-9]{11}$/;
+
+    if(!name){
+        alert("من فضلك اكتب الاسم");
+        return;
+    }
+
+    if(!phoneRegex.test(phone)){
+        alert("ادخل رقم الهاتف صحيح!");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("code").style.display = "none";
+
+    fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .catch(() => ({ ip: "unknown" }))
+    .then(data => {
+
+        const ip = data.ip || "unknown";
+
+        return fetch(
+            "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
+            + "?ip=" + encodeURIComponent(ip)
+            + "&name=" + encodeURIComponent(name)
+            + "&phone=" + encodeURIComponent(phone)
+            + "&source="
+        );
+
+    })
+    .then(res => res.text())
+    .then(code => {
+
+        document.getElementById("loading").style.display = "none";
+
+       document.getElementById("code").innerText = code;
+document.getElementById("code").style.display = "block";
+
+document.getElementById("msgText").style.display = "block";
+    })
+    .catch(err => {
+
+        document.getElementById("loading").style.display = "none";
+
+        console.log(err);
+        alert("حصل خطأ في السيرفر أو الاتصال");
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
