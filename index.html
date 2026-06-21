@@ -238,9 +238,9 @@ p{
     <div class="slider">
         <img src="cake1.webp" class="main-image">
     </div>
-
-    <input type="text" id="name" placeholder="اسم العميل">
-    <input type="text" id="phone" placeholder="رقم الهاتف">
+<input type="text" id="name" placeholder="اسم العميل">
+<input type="text" id="phone" placeholder="رقم الهاتف">
+<input type="text" id="job" placeholder="الوظيفة">
 
     <button onclick="getUserCode()">
         الحصول على الكود
@@ -272,6 +272,7 @@ function getUserCode(){
 
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
+    const job = document.getElementById("job").value.trim();
 
     const phoneRegex = /^[0-9]{11}$/;
 
@@ -282,6 +283,11 @@ function getUserCode(){
 
     if(!phoneRegex.test(phone)){
         alert("ادخل رقم الهاتف صحيح!");
+        return;
+    }
+
+    if(!job){
+        alert("من فضلك اكتب الوظيفة");
         return;
     }
 
@@ -300,6 +306,7 @@ function getUserCode(){
             + "?ip=" + encodeURIComponent(ip)
             + "&name=" + encodeURIComponent(name)
             + "&phone=" + encodeURIComponent(phone)
+            + "&job=" + encodeURIComponent(job)
             + "&source="
         );
 
@@ -309,10 +316,11 @@ function getUserCode(){
 
         document.getElementById("loading").style.display = "none";
 
-       document.getElementById("code").innerText = code;
-document.getElementById("code").style.display = "block";
+        document.getElementById("code").innerText = code;
+        document.getElementById("code").style.display = "block";
 
-document.getElementById("msgText").style.display = "block";
+        document.getElementById("msgText").style.display = "block";
+
     })
     .catch(err => {
 
