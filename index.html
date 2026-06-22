@@ -428,6 +428,16 @@ fetch("https://api.ipify.org?format=json")
 
     document.getElementById("loading").style.display = "none";
 
+    if(code === "الكود مستخدم من قبل"){
+
+        alert("⚠️ الكود مستخدم من قبل");
+
+        document.getElementById("code").style.display = "none";
+        document.getElementById("msgText").style.display = "none";
+
+        return;
+    }
+
     document.getElementById("code").innerText = code;
     document.getElementById("code").style.display = "block";
 
