@@ -335,108 +335,117 @@ p{
 </div>
 <script>
 let gamePlayed = false;
+let userPrize = "";
 
 function pickGift(box){
 
-    if(gamePlayed) return;
 
-    gamePlayed = true;
+if(gamePlayed) return;
 
-    const prizes = [
-        "🎉 خصم 10%",
-        "🎉 خصم 15%",
-        "🎂 قطعة حلوى مجانية"
-    ];
+gamePlayed = true;
 
-    const prize =
-        prizes[Math.floor(Math.random() * prizes.length)];
+const prizes = [
+    "خصم 10%",
+    "خصم 15%",
+    "قطعة حلوى مجانية"
+];
 
-    box.innerHTML = "🏆";
+userPrize = prizes[Math.floor(Math.random() * prizes.length)];
 
-    document.getElementById("giftResult").innerHTML =
-        "مبروك! ربحت: <br>" + prize;
+box.innerHTML = "🏆";
 
-    setTimeout(() => {
+document.getElementById("giftResult").innerHTML =
+    "مبروك! ربحت:<br>" + userPrize;
 
-        document.getElementById("pageContent").style.display =
-            "block";
+setTimeout(() => {
 
-        document.getElementById("gameSection").style.display =
-            "none";
+    document.getElementById("pageContent").style.display = "block";
+    document.getElementById("gameSection").style.display = "none";
 
-    }, 2500);
+}, 2000);
+
+
 }
-
 
 function getUserCode(){
 
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const job = document.getElementById("job").value.trim();
 
-    // تحويل الأرقام العربية إلى إنجليزية
-    const normalizedPhone = phone.replace(/[٠-٩]/g, d =>
-        "٠١٢٣٤٥٦٧٨٩".indexOf(d)
-    );
+if(!gamePlayed){
+    alert("من فضلك العب أولاً لاختيار هديتك 🎁");
+    return;
+}
 
-    const phoneRegex = /^01[0-9]{9}$/;
+const name = document.getElementById("name").value.trim();
+const phone = document.getElementById("phone").value.trim();
+const job = document.getElementById("job").value.trim();
 
-    if(!name){
-        alert("من فضلك اكتب الاسم");
-        return;
-    }
+const normalizedPhone = phone.replace(/[٠-٩]/g, d =>
+    "٠١٢٣٤٥٦٧٨٩".indexOf(d)
+);
 
-    if(!phoneRegex.test(normalizedPhone)){
-        alert("ادخل رقم هاتف مصري صحيح!");
-        return;
-    }
+const phoneRegex = /^01[0-9]{9}$/;
 
-    if(!job){
-        alert("من فضلك اكتب الوظيفة");
-        return;
-    }
+if(!name){
+    alert("من فضلك اكتب الاسم");
+    return;
+}
 
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("code").style.display = "none";
+if(!phoneRegex.test(normalizedPhone)){
+    alert("ادخل رقم هاتف مصري صحيح");
+    return;
+}
 
-    fetch("https://api.ipify.org?format=json")
-    .then(res => res.json())
-    .catch(() => ({ ip: "unknown" }))
-    .then(data => {
+if(!job){
+    alert("من فضلك اكتب الوظيفة");
+    return;
+}
 
-        const ip = data.ip || "unknown";
+document.getElementById("loading").style.display = "block";
+document.getElementById("code").style.display = "none";
 
-        return fetch(
-            "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
-            + "?ip=" + encodeURIComponent(ip)
-            + "&name=" + encodeURIComponent(name)
-            + "&phone=" + encodeURIComponent(normalizedPhone)
-            + "&job=" + encodeURIComponent(job)
-            + "&source="
-        );
+fetch("https://api.ipify.org?format=json")
+.then(res => res.json())
+.catch(() => ({ ip: "unknown" }))
+.then(data => {
 
-    })
-    .then(res => res.text())
-    .then(code => {
+    const ip = data.ip || "unknown";
 
-        document.getElementById("loading").style.display = "none";
+    const url =
+        "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
+        + "?ip=" + encodeURIComponent(ip)
+        + "&name=" + encodeURIComponent(name)
+        + "&phone=" + encodeURIComponent(normalizedPhone)
+        + "&job=" + encodeURIComponent(job)
+        + "&source=" + encodeURIComponent("game")
+        + "&prize=" + encodeURIComponent(userPrize || "بدون جائزة");
 
-        document.getElementById("code").innerText = code;
-        document.getElementById("code").style.display = "block";
+    return fetch(url);
 
-        document.getElementById("msgText").style.display = "block";
+})
+.then(res => res.text())
+.then(code => {
 
-    })
-    .catch(err => {
+    document.getElementById("loading").style.display = "none";
 
-        document.getElementById("loading").style.display = "none";
+    document.getElementById("code").innerText = code;
+    document.getElementById("code").style.display = "block";
 
-        console.log(err);
-        alert("حصل خطأ في السيرفر أو الاتصال");
+    document.getElementById("msgText").style.display = "block";
 
-    });
+})
+.catch(err => {
+
+    document.getElementById("loading").style.display = "none";
+
+    console.error(err);
+
+    alert("حصل خطأ في السيرفر أو الاتصال");
+
+});
+
 
 }
+
 
 </script>
 
