@@ -224,6 +224,38 @@ p{
     }
 }
 
+.gift-boxes{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin:20px 0;
+}
+
+.gift-box{
+    width:90px;
+    height:90px;
+    background:#fff8e7;
+    border:2px solid #0fb0cc;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.gift-box:hover{
+    transform:scale(1.08);
+}
+
+#giftResult{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+    color:#910c8a;
+}
+
 </style>
 </head>
 
@@ -234,7 +266,38 @@ p{
     <img src="logo.webp" class="logo">
 
     <h2>مرحباً بك في Istbrq Patisserie</h2>
+    <div id="gameSection">
 
+    <h3 style="color:#910c8a;margin:15px 0;">
+        🎁 العب واكسب هديتك
+    </h3>
+
+    <p style="color:#444;margin-bottom:15px;">
+        اختر صندوقاً واحداً لمعرفة هديتك
+    </p>
+
+    <div class="gift-boxes">
+
+        <div class="gift-box" onclick="pickGift(this)">
+            🎁
+        </div>
+
+        <div class="gift-box" onclick="pickGift(this)">
+            🎁
+        </div>
+
+        <div class="gift-box" onclick="pickGift(this)">
+            🎁
+        </div>
+
+    </div>
+
+    <div id="giftResult"></div>
+
+</div>
+</div>
+
+<div id="pageContent" style="display:none;">
     <div class="slider">
         <img src="cake1.webp" class="main-image">
     </div>
@@ -271,6 +334,39 @@ p{
 
 </div>
 <script>
+let gamePlayed = false;
+
+function pickGift(box){
+
+    if(gamePlayed) return;
+
+    gamePlayed = true;
+
+    const prizes = [
+        "🎉 خصم 10%",
+        "🎉 خصم 15%",
+        "🎂 قطعة حلوى مجانية"
+    ];
+
+    const prize =
+        prizes[Math.floor(Math.random() * prizes.length)];
+
+    box.innerHTML = "🏆";
+
+    document.getElementById("giftResult").innerHTML =
+        "مبروك! ربحت: <br>" + prize;
+
+    setTimeout(() => {
+
+        document.getElementById("pageContent").style.display =
+            "block";
+
+        document.getElementById("gameSection").style.display =
+            "none";
+
+    }, 2500);
+}
+
 
 function getUserCode(){
 
