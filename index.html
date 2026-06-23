@@ -310,6 +310,7 @@ p{
     inputmode="numeric"
     style="text-align: right;">
     <input type="text" id="job" placeholder="الوظيفة">
+    <input type="text" id="address" placeholder="العنوان">
 
     <button onclick="getUserCode()">
         الحصول على الكود
@@ -379,6 +380,8 @@ if(!gamePlayed){
 const name = document.getElementById("name").value.trim();
 const phone = document.getElementById("phone").value.trim();
 const job = document.getElementById("job").value.trim();
+const address = document.getElementById("address").value.trim();
+
 
 const normalizedPhone = phone.replace(/[٠-٩]/g, d =>
     "٠١٢٣٤٥٦٧٨٩".indexOf(d)
@@ -401,6 +404,11 @@ if(!job){
     return;
 }
 
+if(!address){
+    alert("من فضلك اكتب العنوان");
+    return;
+}
+
 document.getElementById("loading").style.display = "block";
 document.getElementById("code").style.display = "none";
 
@@ -411,16 +419,21 @@ fetch("https://api.ipify.org?format=json")
 
     const ip = data.ip || "unknown";
 
-    const url =
-        "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
-        + "?ip=" + encodeURIComponent(ip)
-        + "&name=" + encodeURIComponent(name)
-        + "&phone=" + encodeURIComponent(normalizedPhone)
-        + "&job=" + encodeURIComponent(job)
-        + "&source=" + encodeURIComponent("")
-        + "&prize=" + encodeURIComponent(userPrize || "بدون جائزة");
 
-    return fetch(url);
+
+const url =
+    "https://script.google.com/macros/s/AKfycbxOXQdaHZ8v4NMswyTndjFlEA3JKMrkgsfgI7d5DcywCOgnwt0pscvV7CsoDREnlO6B/exec"
+    + "?ip=" + encodeURIComponent(ip)
+    + "&name=" + encodeURIComponent(name)
+    + "&phone=" + encodeURIComponent(normalizedPhone)
+    + "&job=" + encodeURIComponent(job)
+    + "&address=" + encodeURIComponent(address)
+    + "&source=" + encodeURIComponent("")
+    + "&prize=" + encodeURIComponent(userPrize || "بدون جائزة");
+
+return fetch(url);
+
+
 
 })
 .then(res => res.text())
